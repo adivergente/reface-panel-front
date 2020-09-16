@@ -8,7 +8,7 @@
       justify-center
       wrap
     >
-      
+
       <v-flex
         md12
       >
@@ -18,7 +18,7 @@
           text="Datos de clientes registrados en la plataforma Reface"
         >
           <v-text-field outline label="Buscar" v-model="buscar">
-            
+
           </v-text-field>
           <v-data-table
             :headers="headers"
@@ -47,16 +47,15 @@
               <td>{{ item.datos_personales.telefono }}</td>
               <td>{{ item.status }}</td>
               <td class="text-xs-right">
-                <Modaldetalles :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
+                <!-- <Modaldetalles :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
                 <Modaleditar :id="item.id" :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :username="item.datos_personales.username" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
-  <!--              <v-btn id="boton_prod" small color="primary" > Compras  </v-btn>        -->
-                <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" />
+                <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" /> -->
               </td>
             </template>
           </v-data-table>
             <Modalalta/>
             <Roles/>
-           
+
         </material-card>
       </v-flex>
     </v-layout>
@@ -105,33 +104,29 @@ export default {
       ver:false,
       headers: [
         {
-          text: 'Nombres',
-          value: 'datos_personales.nombres'
+          text: 'Nombres'
         },
         {
-          text: 'Apellidos',
-          value: 'datos_personales.apellidos'
+          text: 'Apellidos'
         },
         {
-          text: 'Username',
-          value: 'datos_personales.username'
+          text: 'Username'
         },
         {
-          text: 'Teléfono',
-          value: 'datos_personales.telefono'
+          text: 'Teléfono'
         },
         {
-          text: 'Status',
-          value: 'status'
-        },
-        {
-          sortable: false,
-          text: 'Acciones',
-          value: 'acciones',
-          align: 'right'
+          text: 'Status'
         }
+        // {
+        //   sortable: false,
+        //   text: 'Acciones',
+        //   value: 'acciones',
+        //   align: 'right'
+        // }
       ],
-      buscar:null
+      buscar:null,
+      loadingTable: true
     }
 },
  methods: {
@@ -170,10 +165,14 @@ created() {
     }else{
       this.escrito=''
     }
-    api.get(`/ad-usuarios/all-users-admin`)
+    api.get(`/usuarios`)
     .then(response => {
       // JSON responses are automatically parsed.
-      this.items = response.data
+      // console.log(res)
+      const { success, data } = response.data
+      if (!success) return
+      console.log(data)
+      this.items = data
       this.ver = true;
       //console.log(this.items);
     })

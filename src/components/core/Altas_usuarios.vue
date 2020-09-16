@@ -57,7 +57,6 @@
           </v-flex>
         </v-layout>
         <v-card-actions>
-          
           <v-btn
             color="red darken-1"
             flat="flat"
@@ -87,7 +86,6 @@ import $ from 'jquery'
 
 export default {
     name: 'Frame',
-    
     data () {
       return {
         cant: 0,
@@ -95,15 +93,15 @@ export default {
         dialog: false,
         mess: null,
         usuario:{
-          nombres:null,
-          apellidos:null,
-          password:null,
-          email:null,
-          rol:null
+          nombres: '',
+          apellidos: '',
+          password: '',
+          email: '',
+          rol: ''
         },
         passwordRules: {
           required: value => !!value || "Campo obligatorio",
-          min: v => v.length >= 8 || "Type at least 8 characters"
+          min: v => v.length >= 6 || "Type at least 8 characters"
         },
         showPassword: false,
         rules1: [
@@ -147,7 +145,6 @@ export default {
            console.log(e);
          })
        }
-       
     },
     created(){
       api.get('/roles/todos')

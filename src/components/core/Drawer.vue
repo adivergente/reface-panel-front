@@ -130,9 +130,9 @@ export default {
     buscaRol(rol){
       console.log('entro')
       api.post('/roles/buscar', {name:rol})
-      .then(response => {       
+      .then(response => {
           if(response.data.success==true){
-            //this.$router.go()
+            this.$router.go()
             console.log(response.data.data)
             console.log(JSON.parse(response.data.data[0].links))
             this.links = JSON.parse(response.data.data[0].links)

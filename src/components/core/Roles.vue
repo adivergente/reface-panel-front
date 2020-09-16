@@ -196,7 +196,7 @@ export default {
         check:false
       }
     },
-    methods: {      
+    methods: {
       seleccionado(dato){
         var num = 0
         console.log('estado: ',dato.estado)
