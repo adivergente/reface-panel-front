@@ -54,7 +54,7 @@
               </td>
             </template>
           </v-data-table>
-          <Modaleditar :estados="estados" @update="loadUsers" ref="modalEdit"/>
+          <Modaleditar :estados="estados" :roles="roles" @update="loadUsers" ref="modalEdit"/>
           <Modalalta/>
           <Roles/>
         </material-card>
@@ -127,36 +127,17 @@ export default {
         },
         {
           text: 'Status'
+        },
+        {
+          sortable: false,
+          text: 'Acciones',
+          value: 'acciones',
+          align: 'right'
         }
-        // {
-        //   sortable: false,
-        //   text: 'Acciones',
-        //   value: 'acciones',
-        //   align: 'right'
-        // }
       ],
       estados: [],
-      activeUser: {
-        // datos_personales:
-        // {
-        //   nombres: '',
-        //   apellidos: '',
-        //   username: '',
-        //   email: '',
-        //   telefono: ''
-        // },
-        // domicilio: {
-        //   direccion: '',
-        //   localidad: '',
-        //   municipio: '',
-        //   estado: '',
-        //   pais: '',
-        //   codigo_postal: '',
-        //   referencias: ''
-        // },
-        // rol: '',
-        // status: ''
-      },
+      activeUser: {},
+      roles: [],
       buscar:null,
       loadingTable: true
     }
@@ -211,6 +192,20 @@ export default {
         console.log(e);
       })
     },
+    getRoles() {
+      api.get('/roles/todos')
+      .then(response => {
+          if(response.data.success==true){
+            this.roles = response.data.data.map(item => item.nombre)
+          }else{
+            alert(response.data.message)
+          }
+
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    }
  },
 created() {
     //alert(sessionStorage.getItem("dato"))
@@ -226,6 +221,7 @@ created() {
     }
     this.loadUsers()
     this.getEstados()
+    this.getRoles()
 }
 
 

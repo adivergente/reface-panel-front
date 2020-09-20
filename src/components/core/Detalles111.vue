@@ -40,6 +40,14 @@
               label="Username"
               name="username"
             />
+            <v-select
+              v-model="form.rol"
+              :items="roles"
+              multiple
+              class="purple-input"
+              label="Roles"
+              item-text="rol"
+            />
             <v-text-field
               v-model="form.email"
               label="Email"
@@ -77,32 +85,12 @@
               clearable
               :disabled="!municipios.length"
             />
-            <!-- <h4> Localidad: </h4>
             <v-text-field
+              v-model="form.localidad"
               label="Localidad"
               class="purple-input"
               name="localidad"
-              :value="localidad"
-              :rules="rules9"
             />
-            <h4> Municipio: </h4>
-            <v-text-field
-              label="Municipio"
-              class="purple-input"
-              name="municipio"
-              :value="municipio"
-              :rules="rules9"
-            />
-            <h4> Estado: </h4>
-            <v-select
-              label="Estado"
-              class="purple-input"
-              name="estado"
-              :value="estado"
-              :rules="rules9"
-              outlined
-              :items="items1"
-            /> -->
             <v-text-field
               v-model="form.pais"
               label="País"
@@ -164,10 +152,10 @@ import {api} from '@/api'
 export default {
     name: 'EditarUsuario',
     props: {
-      //  item: {
-      //    type: Object,
-      //    default: () => {}
-      //  },
+       roles: {
+         type: Array,
+         default: () => []
+       },
        estados: {
          type: Array,
          default: () => []
@@ -193,7 +181,7 @@ export default {
           cp: '',
           referencias: '',
           status: '',
-          rol: ''
+          rol: []
         },
         reqAlpha: [
           value => !!value || 'Required.',
@@ -241,16 +229,6 @@ export default {
         municipios: []
       }
     },
-    // watch: {
-    //   dialog (val) {
-    //     if (val) {
-    //       if (this.item.domicilio && this.item.domicilio.estado) this.getMunicipios(this.item.domicilio.estado)
-    //     }
-    //   }
-    // },
-    // mounted () {
-    //   this.fillData
-    // },
     methods: {
        Update(){
         if (this.$refs.form.validate()) {
