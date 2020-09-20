@@ -1,127 +1,83 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500">
-    <template v-slot:activator="{ on }">
-      <v-btn v-on="on" small color="#003b94" dark> Editar </v-btn>
-    </template>
-    <v-card>
-      <v-form ref="form" v-on:submit.prevent="Update()" lazy-validation>
-        <v-toolbar color="#003b94">
-         <v-toolbar-title style="color:white;">Editar {{ nombres }} {{ apellidos }}</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <v-layout row>
-          <v-flex xs10 offset-xs1 >
-          <h4> Clave Interna: </h4>
-          <v-text-field
-            class="purple-input"
-            label="Id"
-            :disabled="true"
-            name="id"
-            :value="id"
-          />
-            <h4> Nombres: </h4>
-            <template />
-              <v-text-field
-                class="purple-input"
-                label="Nombres"
-                name="nombres"
-                :value="nombres"
-                :rules="rules1"
-              />
-            <h4> Apellidos: </h4>
-            <template />
-              <v-text-field
-                class="purple-input"
-                label="Apellidos"
-                name="apellidos"
-                :value="apellidos"
-                :rules="rules2"
-              />
-            <h4> Username: </h4>
-            <template />
-              <v-text-field
-                class="purple-input"
-                label="Username"
-                name="username"
-                :value="username"
-                :rules="rules3"
-              />
-            <h4> Email: </h4>
-            <template />
-              <v-text-field
-                label="Email"
-                class="purple-input"
-                name="email"
-                :value="email"
-                :rules="rules4"
-              />
-<!--
-            <h4> Password: </h4>
+  <v-dialog v-model="dialog" max-width="500" scrollable>
+    <v-form ref="form" v-on:submit.prevent="Update()" lazy-validation class="w-100">
+      <v-card>
+        <v-card-title class="pa-0">
+          <v-toolbar color="#003b94">
+          <v-toolbar-title style="color:white;">
+            Editar usuario
+          </v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+        </v-card-title>
+        <v-card-text>
+          <v-layout row>
+            <v-flex xs10 offset-xs1 >
             <v-text-field
-              label="Password"
-              type="password"
               class="purple-input"
-              name="password"
-              disabled="true"
-              :value="password"
-              />
--->
-            <h4> Fecha de nacimiento: </h4>
-            <template>
-              
-                <v-text-field
-                  type="date"
-                  label="Fecha de Nacimiento"
-                  class="purple-input"
-                  name="fecha_nacimiento"
-                  :rules="rules11"
-                  :value="fecha_nacimiento"
-                  />
-            </template>
-            <h4> Telefono: </h4>
+              label="Id"
+              :disabled="true"
+              name="id"
+              :value="form._id"
+            />
             <v-text-field
+              v-model="form.nombres"
+              class="purple-input"
+              label="Nombres"
+              name="nombres"
+              :rules="reqAlpha"
+            />
+            <v-text-field
+              v-model="form.apellidos"
+              class="purple-input"
+              label="Apellidos"
+              name="apellidos"
+              :rules="reqAlpha"
+            />
+            <v-text-field
+              v-model="form.username"
+              class="purple-input"
+              label="Username"
+              name="username"
+            />
+            <v-text-field
+              v-model="form.email"
+              label="Email"
+              class="purple-input"
+              name="email"
+              :rules="reqEmail"
+            />
+            <v-text-field
+              v-model="form.telefono"
               label="Telefono"
               class="purple-input"
               name="telefono"
-              :rules="rules8"
-              :value="telefono"
-              />
-
-            <h4> Num Exterior: </h4>
-            <v-text-field
-              label="Num Exterior"
-              class="purple-input"
-              name="num_exterior"
-              type="number"
-              :rules="rules11"
-              :value="num_exterior"
+              :rules="reqTel"
             />
-            <h4> Num Interior: </h4>
             <v-text-field
-              label="Num Interior"
+              v-model="form.direccion"
+              label="Direccion"
               class="purple-input"
-              name="num_interior"
-              type="number"
-              :rules="rules12"
-              :value="num_interior"
+              name="direccion"
             />
-            <h4> Calle: </h4>
-            <v-text-field
-              label="Calle"
-              class="purple-input"
-              name="calle"
-              :rules="rules5"
-              :value="calle"
+            <v-autocomplete
+              v-model="form.estado"
+              :items="estados"
+              label="Estado"
+              autocomplete="none"
+              clearable
+              @click:clear="estadoCleared"
+              @change="getMunicipios($event)"
             />
-            <h4> Colonia: </h4>
-            <v-text-field
-              label="Colonia"
-              class="purple-input"
-              name="colonia"
-              :value="colonia"
-              :rules="rules6"
+            <v-autocomplete
+              v-model="form.municipio"
+              :items="municipios"
+              label="Municipio"
+              autocomplete="none"
+              clearable
+              :disabled="!municipios.length"
             />
-            <h4> Localidad: </h4>
+            <!-- <h4> Localidad: </h4>
             <v-text-field
               label="Localidad"
               class="purple-input"
@@ -136,7 +92,7 @@
               name="municipio"
               :value="municipio"
               :rules="rules9"
-              />
+            />
             <h4> Estado: </h4>
             <v-select
               label="Estado"
@@ -146,51 +102,45 @@
               :rules="rules9"
               outlined
               :items="items1"
-              />
-            <h4> Pais: </h4>
+            /> -->
             <v-text-field
+              v-model="form.pais"
               label="País"
               class="purple-input"
               name="pais"
-              :value="pais"
-              :rules="rules9"
-              />
-            <h4> Código Postal: </h4>
+            />
             <v-text-field
+              v-model="form.cp"
               class="purple-input"
               label="Código Postal"
               name="codigo_postal"
-              :value="codigo_postal"
-              :rules="rules10"
-              />
-            <h4> Referencias: </h4>
-            <template />
-              <v-textarea
-                class="purple-input"
-                label="Referencias"
-                name="referencias"
-                :rules="rules6"
-                :value="referencias"
-              />
-              <!--
-            <h4> Status: </h4>
-            <v-text-field
-              class="purple-input"
-              label="Status"
-              name="status"
-              disabled="true"
-              :value="status"
             />
-            -->
-          </v-flex>
-        </v-layout>
+            <v-textarea
+              v-model="form.referencias"
+              class="purple-input"
+              label="Referencias"
+              name="referencias"
+              auto-grow
+            />
+                <!--
+              <h4> Status: </h4>
+              <v-text-field
+                class="purple-input"
+                label="Status"
+                name="status"
+                disabled="true"
+                :value="status"
+              />
+              -->
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-divider></v-divider>
         <v-card-actions>
-          
-
           <v-btn
             color="red darken-1"
             flat="flat"
-            @click="dialog = false"
+            @click="dialog = false;$emit('close') "
           >
             Cancelar
           </v-btn>
@@ -199,73 +149,69 @@
             color="green darken-1"
             flat="flat"
             type="submit"
-            @click="dialog = false"
           >
             Guardar Cambios
           </v-btn>
         </v-card-actions>
-      </v-form>
-    </v-card>
+      </v-card>
+    </v-form>
   </v-dialog>
 </template>
 
 <script>
 import {api} from '@/api'
-import $ from 'jquery'
 
 export default {
-    name: 'Frame',
+    name: 'EditarUsuario',
     props: {
-       id: String,
-       nombres: String,
-       apellidos: String,
-       username: String,
-       email: String,
-       password: String,
-       fecha_nacimiento: String,
-       telefono: String,
-       num_interior: String,
-       num_exterior: String,
-       calle: String,
-       colonia: String,
-       localidad: String,
-       municipio: String,
-       estado: String,
-       pais: String,
-       codigo_postal: String,
-       referencias: String,
-       status: String
+      //  item: {
+      //    type: Object,
+      //    default: () => {}
+      //  },
+       estados: {
+         type: Array,
+         default: () => []
+       }
     },
     data () {
       return {
         cant: 0,
         info:null,
         dialog: false,
-        rules1: [
+        form: {
+          _id: '',
+          nombres: '',
+          apellidos: '',
+          username: '',
+          email: '',
+          telefono: '',
+          direccion: '',
+          localidad: '',
+          municipio: '',
+          estado: '',
+          pais: '',
+          cp: '',
+          referencias: '',
+          status: '',
+          rol: ''
+        },
+        reqAlpha: [
           value => !!value || 'Required.',
           value => (value || '').length <= 50 || 'Max 50 characters',
           value => {
             const pattern = /^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/;
-            return pattern.test(value) || 'Nombre(s) invalido(s).'
+            return pattern.test(value) || 'Formato no válido.'
           },
         ],
-        rules2: [
-          value => !!value || 'Required.',
-          value => (value || '').length <= 50 || 'Max 50 characters',
-          value => {
-            const pattern = /^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/;
-            return pattern.test(value) || 'Apellido(s) invalido(s).'
-          },
-        ],
-        rules3: [
-          value => !!value || 'Required.',
-          value => (value || '').length <= 50 || 'Max 50 characters',
-          value => {
-            const pattern = /^[a-z0-9_-]{3,16}$/;
-            return pattern.test(value) || 'Username invalido.'
-          },
-        ],
-        rules4: [
+        // reqUsername: [
+        //   value => !!value || 'Required.',
+        //   value => (value || '').length <= 50 || 'Max 50 characters',
+        //   value => {
+        //     const pattern = /^[a-z0-9_-]{3,16}$/;
+        //     return pattern.test(value) || 'Username invalido.'
+        //   },
+        // ],
+        reqEmail: [
           value => !!value || 'Required.',
           value => (value || '').length <= 50 || 'Max 50 characters',
           value => {
@@ -273,23 +219,7 @@ export default {
             return pattern.test(value) || 'Email invalido.'
           },
         ],
-        rules5: [
-          value => !!value || 'Required.',
-          value => (value || '').length <= 50 || 'Max 50 characters',
-          value => {
-            const pattern = /^([A-ZÁÉÍÓÚ0-9]{1}[a-zñáéíóú0-9]+[\s]*)+$/;
-            return pattern.test(value) || 'Calle invalida.'
-          },
-        ],
-        rules6: [
-          value => !!value || 'Required.',
-          value => (value || '').length <= 100 || 'Max 100 characters',
-          value => {
-            const pattern = /^([A-ZÁÉÍÓÚ0-9]{1}[a-zñáéíóú0-9]+[\s]*)+$/;
-            return pattern.test(value) || 'Datos invalidos.'
-          },
-        ],
-        rules8: [
+        reqTel: [
           value => !!value || 'Required.',
           value => (value || '').length <= 10 || 'Max 10 characters',
           value => {
@@ -297,15 +227,7 @@ export default {
             return pattern.test(value) || 'Telefono invalido.'
           },
         ],
-        rules9: [
-          value => !!value || 'Required.',
-          value => (value || '').length <= 100 || 'Max 100 characters',
-          value => {
-            const pattern = /^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/;
-            return pattern.test(value) || 'Datos invalidos.'
-          },
-        ],
-        rules10: [
+        reqCp: [
           value => !!value || 'Required.',
           value => (value || '').length <= 50 || 'Max 50 characters',
           value => {
@@ -313,43 +235,74 @@ export default {
             return pattern.test(value) || 'CP invalido.'
           },
         ],
-        rules11:[
-          value => !!value || 'Required.'
+        req:[
+          value => !!value || 'Campo requerido.'
         ],
-        rules12:[
-          value => !!value || 'Required.',
-          value => (value || '').length <= 5 || 'Max 5 characters',
-          value => {
-            const pattern = /^[0-9A-Za-z]*$/;
-            return pattern.test(value) || 'Numero interior invalido.'
-          },
-        ],
-        items1: ["Aguascalientes","Baja California","Baja California Sur","Chihuahua","Chiapas", "Campeche", "Ciudad de Mexico", "Coahuila", "Colima", "Durango", "Guerrero", "Guanajuato", "Hidalgo", "Jalisco", "Michoacan", "Estado de Mexico", "Morelos", "Nayarit",  "Nuevo Leon", "Oaxaca", "Puebla",  "Quintana Roo", "Queretaro", "Sinaloa", "San Luis Potosi", "Sonora", "Tabasco", "Tlaxcala", "Tamaulipas", "Veracruz", "Yucatan", "Zacatecas"]
+        municipios: []
       }
     },
+    // watch: {
+    //   dialog (val) {
+    //     if (val) {
+    //       if (this.item.domicilio && this.item.domicilio.estado) this.getMunicipios(this.item.domicilio.estado)
+    //     }
+    //   }
+    // },
+    // mounted () {
+    //   this.fillData
+    // },
     methods: {
        Update(){
-          var array =
-                 api.post('/ad-usuarios/update-user', $(event.currentTarget).serializeArray())
-                 .then(response => {
-                   // JSON responses are automatically parsed.
-        //           this.models = response.data;
-                     alert('Actualización de cliente'+this.$router);
-                     this.$router.go()
-                     //this.$router.go()
-                   //console.log(this.items);
-                 })
-                 .catch(e => {
-        //           this.errors.push(e)
-                 //  console.log("Error");
-                   console.log(e);
-                 })
+        if (this.$refs.form.validate()) {
+          // console.log('valido')
+          api.patch('/usuarios/update', this.form)
+          .then(response => {
+              console.log('response update:', response.data)
+              this.$emit('update')
+              this.dialog = false
+          })
+          .catch(e => {
+            console.log(e);
+          })
+        }
 
       },
-      Validation(){
-        //Validar que los campos esten completos
-
-        //validar que los campos cumplan con el formato
+      getMunicipios(estado) {
+        // console.log(estado)
+        api.get(`/utils/municipios/${estado}`)
+          .then(response => {
+            console.log(response.data)
+            const { data } = response.data
+            this.municipios = data.map(obj => obj.nombre)
+          })
+          .catch(e => {
+            console.log(e);
+          })
+      },
+      estadoCleared () {
+        this.form.estado = ''
+        this.form.municipio = ''
+        this.form.municipios = []
+      },
+      fillData(user){
+        this.form = {
+          _id: user._id || '',
+          nombres: user.datos_personales.nombres || '',
+          apellidos: user.datos_personales.apellidos || '',
+          username: user.datos_personales.uername || '',
+          email: user.datos_personales.email || '',
+          telefono: user.datos_personales.telefono || '',
+          direccion: user.domicilio.direccion || '',
+          localidad: user.domicilio.localidad || '',
+          municipio: user.domicilio.municipio || '',
+          estado: user.domicilio.estado || '',
+          pais: user.domicilio.pais || '',
+          cp: user.domicilio.codigo_postal || '',
+          referencias: user.domicilio.referencias || '',
+          status: user.status || '',
+          rol: user.rol || ''
+        }
+        if (user.domicilio && user.domicilio.estado) this.getMunicipios(user.domicilio.estado)
       }
     }
 }

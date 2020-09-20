@@ -5,25 +5,22 @@
     </template>
     <v-card>
       <v-toolbar dark color="indigo">
-       <v-toolbar-title style="color:white;">Ver detalles de {{nombres}} {{apellidos}}</v-toolbar-title>
+       <v-toolbar-title style="color:white;">Ver detalles de {{item.datos_personales.nombres}} {{item.datos_personales.apellidos}}</v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
       <v-layout row>
         <v-flex xs10 offset-xs1 >
-          <h4> Email: {{email}} </h4>
-          <h4> Fecha de nacimiento: {{fecha}} </h4>
-          <h4> Telefono: {{telefono}} </h4>
-          <h4> Número interior: {{interior}} </h4>
-          <h4> Número exterior: {{exterior}} </h4>
-          <h4> Calle: {{calle}} </h4>
-          <h4> Colonia: {{colonia}} </h4>
-          <h4> Localidad: {{localidad}} </h4>
-          <h4> Municipio: {{municipio}} </h4>
-          <h4> Estado: {{estado}} </h4>
-          <h4> País: {{pais}} </h4>
-          <h4> Código Postal: {{cp}} </h4>
-          <h4> Referencias: {{referencias}} </h4>
-          <h4> Status: {{status}} </h4>
+          <h4> Email: {{item.datos_personales.email}} </h4>
+          <h4> Telefono: {{item.datos_personales.telefono}} </h4>
+          <h4> Dirección: {{item.domicilio.direccion}} </h4>
+          <h4> CP: {{item.domicilio.codigo_postal}} </h4>
+          <h4> Estado: {{item.domicilio.estado}} </h4>
+          <h4> Municipio: {{item.domicilio.municipio}} </h4>
+          <h4> Localidad: {{item.domicilio.localidad}} </h4>
+          <h4> País: {{item.domicilio.pais}} </h4>
+          <h4> Referencias: {{item.domicilio.referencias}} </h4>
+          <h4> Rol: {{item.rol.join(', ')}} </h4>
+          <h4> Status: {{item.domicilio.status}} </h4>
         </v-flex>
       </v-layout>
       <v-card-actions>
@@ -41,24 +38,12 @@
 </template>
 <script>
 export default {
-    name: 'Frame',
+    name: 'UserDetalles',
     props: {
-      nombres: String,
-      apellidos: String,
-      email: String,
-      fecha: String,
-      telefono: String,
-      interior: String,
-      exterior: String,
-      calle: String,
-      colonia: String,
-      localidad: String,
-      municipio: String,
-      estado: String,
-      pais: String,
-      cp: String,
-      referencias: String,
-      status: String
+      item: {
+        type: Object,
+        default: () => {}
+      }
     },
     data () {
       return {
@@ -73,5 +58,4 @@ export default {
   .toolbar__content {
     margin-left: 0px!important;
 }
-
 </style>

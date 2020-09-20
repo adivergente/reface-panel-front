@@ -6,7 +6,7 @@
     <v-card>
       <v-form ref="form" v-on:submit.prevent="Update()" lazy-validation>
         <v-toolbar color="#003b94">
-         <v-toolbar-title style="color:white;">Nuevo Usuario</v-toolbar-title>
+          <v-toolbar-title style="color:white;">Nuevo Usuario</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-layout row>
@@ -127,43 +127,29 @@ export default {
        Update(){
          api.post('/ad-usuarios/nuevo', this.usuario)
          .then(response => {
-           // JSON responses are automatically parsed.
-//           this.models = response.data;
               if(response.data.success==true){
                 this.$router.go()
               }else{
                 alert(response.data.message)
               }
-             //this.mess  = response.data.message;
-           //console.log(this.items);
-           //alert(this.mess);
-
          })
          .catch(e => {
-//           this.errors.push(e)
-         //  console.log("Error");
            console.log(e);
          })
+          console.log(this.usuario)
        }
     },
     created(){
       api.get('/roles/todos')
       .then(response => {
-        // JSON responses are automatically parsed.
-//           this.models = response.data;
           if(response.data.success==true){
             this.roles=response.data.data
           }else{
             alert(response.data.message)
           }
-          //this.mess  = response.data.message;
-        //console.log(this.items);
-        //alert(this.mess);
 
       })
       .catch(e => {
-//           this.errors.push(e)
-      //  console.log("Error");
         console.log(e);
       })
     }

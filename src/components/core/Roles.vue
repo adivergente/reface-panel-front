@@ -21,11 +21,11 @@
             />
             <v-data-table
               :headers="headers"
-              :items="links"          
-              loading-text="Buscando... por favor, espere un momento."    
+              :items="links"
+              loading-text="Buscando... por favor, espere un momento."
                item-key="name"
-                hide-actions      
-                v-model="selected"  
+                hide-actions
+                v-model="selected"
             >
             <template
               slot="headerCell"
@@ -41,20 +41,19 @@
               slot-scope="{ item }"
             >
               <td>
-                <v-checkbox                  
+                <v-checkbox
                   :input-value="item.selected"
                   primary
                   hide-details
                   @click.native="seleccionado(item)"
                 ></v-checkbox>
               </td>
-              <td>{{ item.name }}</td>
+              <td>{{ item.text }}</td>
             </template>
           </v-data-table>
           </v-flex>
         </v-layout>
         <v-card-actions>
-          
           <v-btn
             color="red darken-1"
             flat="flat"
@@ -68,7 +67,6 @@
             color="green darken-1"
             flat="flat"
             type="submit"
-            
           >
             Guardar
           </v-btn>
@@ -81,10 +79,10 @@
 <script>
 import {api} from '@/api'
 import $ from 'jquery'
+import routerLinks from '@/utils/routerLinks'
 
 export default {
     name: 'Frame',
-    
     data () {
       return {
         cant: 0,
@@ -126,71 +124,7 @@ export default {
             value: 'nombre'
           }
         ],
-        links:[
-          {
-            to: '/dashboard',
-            icon: 'mdi-view-dashboard',
-            text: 'Inicio',
-            name: 'Inicio',
-            estado: 'false'
-          },
-          {
-            to: '/admin',
-            icon: 'mdi-account',
-            text: 'Mi cuenta',
-            name: 'Mi cuenta',
-            estado: 'false'
-          },
-          {
-            to: '/clientes',
-            icon: 'mdi-account',
-            text: 'Clientes',
-            name: 'Clientes',
-            estado: 'false'
-          },
-          {
-            to: '/productos',
-            icon: 'mdi-animation',
-            text: 'Productos',
-            name: 'Productos',
-            estado: 'false'
-          },
-          {
-            to: '/compras',
-            icon: 'mdi-clipboard-outline',
-            text: 'Ordenes de Compra',
-            name: 'Ordenes de Compra',
-            estado: 'false'
-          },
-          {
-            to: '/promociones',
-            icon: 'mdi-animation',
-            text: 'Promociones',
-            name: 'Promociones',
-            estado: 'false'
-          },
-          {
-            to: '/noticias',
-            icon: 'mdi-clipboard-outline',
-            text: 'Noticias',
-            name: 'Noticias',
-            estado: 'false'
-          },
-          {
-            to: '/index',
-            icon: 'mdi-clipboard-outline',
-            text: 'Edición de index',
-            name: 'Edición de index',
-            estado: 'false'
-          },
-          {
-            to: '/usuarios',
-            icon: 'mdi-account',
-            text: 'Usuarios',
-            name: 'Usuarios',
-            estado: 'false'
-          }
-        ],
+        links: routerLinks,
         selected:[],
         selected2:[],
         check:false

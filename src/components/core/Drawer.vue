@@ -83,6 +83,7 @@ import {
   mapMutations,
   mapState
 } from 'vuex'
+import routerLinks from '@/utils/routerLinks'
 
 export default {
   data: () => ({
@@ -148,58 +149,7 @@ export default {
   created(){
     const roles = this.$jwt.decode(localStorage.getItem('reface')).rol || []
     if(roles.includes('Admin') || roles.includes('admin')) {
-      this.links= [
-      {
-        to: '/dashboard',
-        icon: 'mdi-view-dashboard',
-        text: 'Inicio'
-      },
-      {
-        to: '/admin',
-        icon: 'mdi-account',
-        text: 'Mi cuenta'
-      },
-      {
-        to: '/clientes',
-        icon: 'mdi-account',
-        text: 'Clientes'
-      },
-      {
-        to: '/productos',
-        icon: 'mdi-animation',
-        text: 'Productos'
-      },
-      {
-        to: '/compras',
-        icon: 'mdi-clipboard-outline',
-        text: 'Ordenes de Compra'
-      },
-      {
-        to: '/promociones',
-        icon: 'mdi-animation',
-        text: 'Promociones'
-      },
-      {
-        to: '/noticias',
-        icon: 'mdi-clipboard-outline',
-        text: 'Noticias'
-      },
-      {
-        to: '/index',
-        icon: 'mdi-clipboard-outline',
-        text: 'Edición de index'
-      },
-      {
-        to: '/usuarios',
-        icon: 'mdi-account',
-        text: 'Usuarios'
-      },
-      {
-        to: '/garantias',
-        icon: 'mdi-package-up',
-        text: 'Garantías y Devoluciones'
-      }
-    ]
+      this.links= routerLinks
     }else{
       this.buscaRol(sessionStorage.getItem('rol'))
     }

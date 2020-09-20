@@ -14,8 +14,8 @@
       >
         <material-card
           color="rgb(21, 45, 91)"
-          title="Clientes"
-          text="Datos de clientes registrados en la plataforma Reface"
+          title="Usuarios"
+          text="Datos de usuarios registrados en la plataforma Reface"
         >
           <v-text-field outline label="Buscar" v-model="buscar">
 
@@ -45,17 +45,18 @@
               <td>{{ item.datos_personales.apellidos }}</td>
               <td>{{ item.datos_personales.username }}</td>
               <td>{{ item.datos_personales.telefono }}</td>
+              <td>{{ item.rol.join(', ') }}</td>
               <td>{{ item.status }}</td>
               <td class="text-xs-right">
-                <!-- <Modaldetalles :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
-                <Modaleditar :id="item.id" :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :username="item.datos_personales.username" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
-                <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" /> -->
+                <Modaldetalles :item="item"/>
+                <v-btn small color="#003b94" dark @click="editUser(item)"> Editar </v-btn>
+                <!-- <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" /> -->
               </td>
             </template>
           </v-data-table>
-            <Modalalta/>
-            <Roles/>
-
+          <Modaleditar :estados="estados" @update="loadUsers" ref="modalEdit"/>
+          <Modalalta/>
+          <Roles/>
         </material-card>
       </v-flex>
     </v-layout>
@@ -74,13 +75,19 @@ import {api} from '@/api'
 //import $ from 'jquery'
 //import axios from 'axios'
 export default {
-    components:{
+  name: 'Usuarios',
+  components:{
 //    toolbar,
-      Modaldetalles,
-      Modaleliminar,
-      Modaleditar,
-      Modalalta,
-      Roles
+    Modaldetalles,
+    Modaleliminar,
+    Modaleditar,
+    Modalalta,
+    Roles
+  },
+  computed: {
+    activeUserHasData() {
+      return this.activeUser.hasOwnProperty('datos_personales')
+    }
   },
   data () {
     return {
@@ -116,6 +123,9 @@ export default {
           text: 'Teléfono'
         },
         {
+          text: 'Rol'
+        },
+        {
           text: 'Status'
         }
         // {
@@ -125,6 +135,28 @@ export default {
         //   align: 'right'
         // }
       ],
+      estados: [],
+      activeUser: {
+        // datos_personales:
+        // {
+        //   nombres: '',
+        //   apellidos: '',
+        //   username: '',
+        //   email: '',
+        //   telefono: ''
+        // },
+        // domicilio: {
+        //   direccion: '',
+        //   localidad: '',
+        //   municipio: '',
+        //   estado: '',
+        //   pais: '',
+        //   codigo_postal: '',
+        //   referencias: ''
+        // },
+        // rol: '',
+        // status: ''
+      },
       buscar:null,
       loadingTable: true
     }
@@ -149,9 +181,36 @@ export default {
       //  console.log("Error");
       //  console.log(e);
       })
-
-
-    }
+    },
+    loadUsers () {
+      api.get(`/usuarios`)
+      .then(response => {
+        const { success, data } = response.data
+        if (!success) return
+        console.log(data)
+        this.items = data
+        this.ver = true;
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
+    },
+    editUser (user) {
+      console.log(user)
+      this.$refs.modalEdit.fillData(user)
+      this.$refs.modalEdit.dialog = true
+    },
+    getEstados() {
+      api.get('/utils/estados')
+      .then(response => {
+        console.log(response.data)
+        const { data } = response.data
+        this.estados = data.map(obj => obj.nombre)
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    },
  },
 created() {
     //alert(sessionStorage.getItem("dato"))
@@ -165,22 +224,8 @@ created() {
     }else{
       this.escrito=''
     }
-    api.get(`/usuarios`)
-    .then(response => {
-      // JSON responses are automatically parsed.
-      // console.log(res)
-      const { success, data } = response.data
-      if (!success) return
-      console.log(data)
-      this.items = data
-      this.ver = true;
-      //console.log(this.items);
-    })
-    .catch(e => {
-      this.errors.push(e)
-    //  console.log("Error");
-    //  console.log(e);
-    })
+    this.loadUsers()
+    this.getEstados()
 }
 
 
