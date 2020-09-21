@@ -10,6 +10,7 @@
       </v-toolbar>
       <v-layout row>
         <v-flex xs10 offset-xs1 >
+          <h4 v-if="item.datos_personales.username"> Username: {{item.datos_personales.username}} </h4>
           <h4> Email: {{item.datos_personales.email}} </h4>
           <h4> Telefono: {{item.datos_personales.telefono}} </h4>
           <h4> Dirección: {{item.domicilio.direccion}} </h4>
@@ -20,7 +21,7 @@
           <h4> País: {{item.domicilio.pais}} </h4>
           <h4> Referencias: {{item.domicilio.referencias}} </h4>
           <h4> Rol: {{item.rol.join(', ')}} </h4>
-          <h4> Status: {{item.domicilio.status}} </h4>
+          <h4> Status: {{item.status}} </h4>
         </v-flex>
       </v-layout>
       <v-card-actions>

@@ -289,7 +289,7 @@ export default {
           _id: user._id || '',
           nombres: user.datos_personales.nombres || '',
           apellidos: user.datos_personales.apellidos || '',
-          username: user.datos_personales.uername || '',
+          username: user.datos_personales.username || '',
           email: user.datos_personales.email || '',
           telefono: user.datos_personales.telefono || '',
           direccion: user.domicilio.direccion || '',

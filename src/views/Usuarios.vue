@@ -47,7 +47,9 @@
               <td>{{ item.datos_personales.username }}</td>
               <td>{{ item.datos_personales.telefono }}</td>
               <td>{{ item.rol.join(', ') }}</td>
-              <td>{{ item.status }}</td>
+              <td>
+                <v-switch true-value="Activo" false-value="Inactivo" :input-value="item.status" color="green" :label="item.status" @change="changeStatus(item)"></v-switch>
+              </td>
               <td class="text-xs-right">
                 <Modaldetalles :item="item"/>
                 <v-btn small color="#003b94" dark @click="$refs.modalCreateEdit.editUser(item)"> Editar </v-btn>
@@ -195,10 +197,6 @@ export default {
         console.log(e);
       })
     },
-    // newUser () {
-    //   this.$refs.modalCreateEdit.edit = false
-    //   this.$refs.modalCreateEdit.dialog = true
-    // },
     getRoles() {
       api.get('/roles/todos')
       .then(response => {
@@ -208,6 +206,22 @@ export default {
             alert(response.data.message)
           }
 
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    },
+    changeStatus (user) {
+      console.log('change',user)
+      const status = user.status == 'Activo' ? 'Inactivo' : 'Activo'
+      api.post(`/usuarios/change-status/${user._id}`, { status })
+      .then(response => {
+          if(response.data.success==true){
+            this.loadUsers()
+            this.$root.$emit('notify', { message: response.data.message, type: 'success' })
+            return
+          }
+          this.$root.$emit('notify', { message: response.data.message, type: 'error' })
       })
       .catch(e => {
         console.log(e);
