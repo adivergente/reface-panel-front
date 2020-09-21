@@ -24,10 +24,10 @@
             :headers="headers"
             :items="items"
             :loading="ver"
-            :total-items="10"
             item-key="nombres"
             loading-text="Buscando... por favor, espere un momento."
             :search="buscar"
+            :pagination.sync="pagination"
           >
             <template
               slot="headerCell"
@@ -48,17 +48,49 @@
               <td>{{ item.datos_personales.telefono }}</td>
               <td>{{ item.rol.join(', ') }}</td>
               <td>
-                <v-switch true-value="Activo" false-value="Inactivo" :input-value="item.status" color="green" :label="item.status" @change="changeStatus(item)"></v-switch>
+                <v-switch
+                  true-value="Activo"
+                  false-value="Inactivo"
+                  :input-value="item.status"
+                  color="green" :label="item.status"
+                  hide-details
+                  @change="changeStatus(item)"
+                />
               </td>
-              <td class="text-xs-right">
-                <Modaldetalles :item="item"/>
-                <v-btn small color="#003b94" dark @click="$refs.modalCreateEdit.editUser(item)"> Editar </v-btn>
+              <td class="d-flex align-center justify-end">
+                <v-btn flat icon color="#003b94!important" class="text-lowercase" @click="$refs.modalDetalles.setInfo(item)" :ripple="false">
+                  ver
+                </v-btn>
+                <v-menu left offset-y class="br-custom">
+                  <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">mdi-dots-vertical</v-icon>
+                  </template>
+                  <v-list dense class="py-1">
+                    <v-list-tile
+                      @click="$refs.modalCreateEdit.editUser(item)"
+                    >
+                      <v-list-tile-title>Editar</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile
+                      @click="$refs.modalCreateEdit.editUser(item)"
+                    >
+                      <v-list-tile-title>Cambiar contraseña</v-list-tile-title>
+                    </v-list-tile>
+                    <v-divider></v-divider>
+                    <v-list-tile
+                      @click="$refs.modalCreateEdit.editUser(item)"
+                    >
+                      <v-list-tile-title class="red--text">Eliminar</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
                 <!-- <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" /> -->
               </td>
             </template>
           </v-data-table>
-          <modal-usuario :estados="estados" :roles="roles" @done="loadUsers" ref="modalCreateEdit"/>
-          <v-btn small color="#003b94" dark @click="$refs.modalCreateEdit.newUser()"> Nuevo usuario </v-btn>
+          <Modaldetalles ref="modalDetalles"/>
+          <modal-usuario class="white--text" :estados="estados" :roles="roles" @done="loadUsers" ref="modalCreateEdit"/>
+          <v-btn class="white--text" small color="#003b94" dark @click="$refs.modalCreateEdit.newUser()"> Nuevo usuario </v-btn>
           <!-- <Modalalta/> -->
           <Roles/>
         </material-card>
@@ -249,3 +281,8 @@ created() {
 }
 
 </script>
+<style lang="scss" scoped>
+.v-list__tile__title {
+  text-align: right;
+}
+</style>

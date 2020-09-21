@@ -19,7 +19,7 @@ export default {
 .v-datatable thead th.column.sortable i {
   vertical-align: unset;
 }
-.v-btn{
-  color:white !important;
-}
+// .v-btn{
+//   color:white !important;
+// }
 </style>

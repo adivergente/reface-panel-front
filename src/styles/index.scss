@@ -19,3 +19,10 @@
 .w-100 {
   width: 100%;
 }
+.v-list--dense .v-list__tile:not(.v-list__tile--avatar) {
+  height: 25px;
+}
+
+.v-menu__content {
+  border-radius: 4px;
+}

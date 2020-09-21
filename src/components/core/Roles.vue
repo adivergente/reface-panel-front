@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" small color="#003b94" dark> Añadir Rol </v-btn>
+      <v-btn class="white--text" v-on="on" small color="#003b94" dark> Añadir Rol </v-btn>
     </template>
     <v-card>
       <v-form ref="form" v-on:submit.prevent="Update()" lazy-validation>
@@ -144,12 +144,10 @@ export default {
         if(num==0){
           this.selected2.push(dato)
         }
-        
         this.selected = this.selected2
         this.selected2 = []
         console.log('arreglo: ',this.selected)
         console.log('arreglo2: ',this.selected2)
-        
       },
        Update(){
 

@@ -1,38 +1,35 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
-    <template v-slot:activator="{ on }">
-      <v-btn v-on="on" small color="#003b94" dark> Detalles </v-btn>
-    </template>
     <v-card>
       <v-toolbar dark color="indigo">
-       <v-toolbar-title style="color:white;">Ver detalles de {{item.datos_personales.nombres}} {{item.datos_personales.apellidos}}</v-toolbar-title>
+       <v-toolbar-title style="color:white;">Ver detalles de {{user.nombres}} {{user.apellidos}}</v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
       <v-layout row>
         <v-flex xs10 offset-xs1 >
-          <h4 v-if="item.datos_personales.username"> Username: {{item.datos_personales.username}} </h4>
-          <h4> Email: {{item.datos_personales.email}} </h4>
-          <h4> Telefono: {{item.datos_personales.telefono}} </h4>
-          <h4> Dirección: {{item.domicilio.direccion}} </h4>
-          <h4> CP: {{item.domicilio.codigo_postal}} </h4>
-          <h4> Estado: {{item.domicilio.estado}} </h4>
-          <h4> Municipio: {{item.domicilio.municipio}} </h4>
-          <h4> Localidad: {{item.domicilio.localidad}} </h4>
-          <h4> País: {{item.domicilio.pais}} </h4>
-          <h4> Referencias: {{item.domicilio.referencias}} </h4>
-          <h4> Rol: {{item.rol.join(', ')}} </h4>
-          <h4> Status: {{item.status}} </h4>
+          <h4 v-if="user.username"> Username: {{user.username}} </h4>
+          <h4> Email: {{user.email}} </h4>
+          <h4> Telefono: {{user.telefono}} </h4>
+          <h4> Dirección: {{user.direccion}} </h4>
+          <h4> CP: {{user.codigo_postal}} </h4>
+          <h4> Estado: {{user.estado}} </h4>
+          <h4> Municipio: {{user.municipio}} </h4>
+          <h4> Localidad: {{user.localidad}} </h4>
+          <h4> País: {{user.pais}} </h4>
+          <h4> Referencias: {{user.referencias}} </h4>
+          <h4> Rol: {{user.rol}} </h4>
+          <h4> Status: {{user.status}} </h4>
         </v-flex>
       </v-layout>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          flat
-          @click="dialog = false"
-        >
-          Aceptar
-        </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn
+        color="primary"
+        flat
+        @click="dialog = false"
+      >
+        Aceptar
+      </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -40,17 +37,32 @@
 <script>
 export default {
     name: 'UserDetalles',
-    props: {
-      item: {
-        type: Object,
-        default: () => {}
-      }
-    },
     data () {
       return {
         cant: 0,
-        info:null,
+        user: {},
         dialog: false,
+      }
+    },
+    methods: {
+      setInfo(user) {
+        this.user = {
+          nombres: user.datos_personales.nombres || '',
+          apellidos: user.datos_personales.apellidos || '',
+          username: user.datos_personales.username || '',
+          email: user.datos_personales.email || '',
+          telefono: user.datos_personales.telefono || '',
+          direccion: user.domicilio.direccion || '',
+          codigo_postal: user.domicilio.codigo_postal || '',
+          estado: user.domicilio.estado || '',
+          municipio: user.domicilio.municipio || '',
+          localidad: user.domicilio.localidad || '',
+          pais: user.domicilio.pais || '',
+          referencias: user.domicilio.referencias || '',
+          rol: user.rol.join(', ') || '',
+          status: user.status || ''
+        }
+        this.dialog = true
       }
     }
 }
