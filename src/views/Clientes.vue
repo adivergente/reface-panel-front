@@ -47,7 +47,7 @@
               <td>{{ item.status }}</td>
               <td class="text-xs-right">
                 <Modaldetalles :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
-                <Modaleditar :id="item.id" :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :username="item.datos_personales.username" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
+                <modal-usuario :id="item.id" :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :username="item.datos_personales.username" :fecha="item.datos_personales.fecha_nacimiento" :telefono="item.datos_personales.telefono" :interior="item.domicilio.num_interior" :exterior="item.domicilio.num_exterior" :calle="item.domicilio.calle" :colonia="item.domicilio.colonia" :localidad="item.domicilio.localidad" :municipio="item.domicilio.municipio" :estado="item.domicilio.estado" :pais="item.domicilio.pais" :cp="item.domicilio.codigo_postal" :referencias="item.domicilio.referencias" :status="item.status" />
   <!--              <v-btn id="boton_prod" small color="primary" > Compras  </v-btn>        -->
                 <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" />
               </td>
@@ -63,7 +63,7 @@
 
 //import toolbar from '@/components/Toolbar.vue'
 import Modaldetalles from '@/components/core/Detalles.vue'
-import Modaleditar from '@/components/core/Detalles111.vue'
+import ModalUsuario from '@/components/core/AddEditUser.vue'
 import Modaleliminar from '@/components/core/Detalles2.vue'
 import {api} from '@/api'
 //import $ from 'jquery'
@@ -73,7 +73,7 @@ export default {
 //    toolbar,
       Modaldetalles,
       Modaleliminar,
-      Modaleditar
+      ModalUsuario
   },
   data () {
     return {

@@ -24,6 +24,7 @@
             :headers="headers"
             :items="items"
             :loading="ver"
+            :total-items="10"
             item-key="nombres"
             loading-text="Buscando... por favor, espere un momento."
             :search="buscar"
@@ -49,13 +50,14 @@
               <td>{{ item.status }}</td>
               <td class="text-xs-right">
                 <Modaldetalles :item="item"/>
-                <v-btn small color="#003b94" dark @click="editUser(item)"> Editar </v-btn>
+                <v-btn small color="#003b94" dark @click="$refs.modalCreateEdit.editUser(item)"> Editar </v-btn>
                 <!-- <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" /> -->
               </td>
             </template>
           </v-data-table>
-          <Modaleditar :estados="estados" :roles="roles" @update="loadUsers" ref="modalEdit"/>
-          <Modalalta/>
+          <modal-usuario :estados="estados" :roles="roles" @done="loadUsers" ref="modalCreateEdit"/>
+          <v-btn small color="#003b94" dark @click="$refs.modalCreateEdit.newUser()"> Nuevo usuario </v-btn>
+          <!-- <Modalalta/> -->
           <Roles/>
         </material-card>
       </v-flex>
@@ -67,7 +69,7 @@
 
 //import toolbar from '@/components/Toolbar.vue'
 import Modaldetalles from '@/components/core/Detalles.vue'
-import Modaleditar from '@/components/core/Detalles111.vue'
+import ModalUsuario from '@/components/core/AddEditUser.vue'
 import Modaleliminar from '@/components/core/Detalles2.vue'
 import Modalalta from '@/components/core/Altas_usuarios.vue'
 import Roles from '@/components/core/Roles.vue'
@@ -80,7 +82,7 @@ export default {
 //    toolbar,
     Modaldetalles,
     Modaleliminar,
-    Modaleditar,
+    ModalUsuario,
     Modalalta,
     Roles
   },
@@ -177,9 +179,10 @@ export default {
       })
     },
     editUser (user) {
-      console.log(user)
-      this.$refs.modalEdit.fillData(user)
-      this.$refs.modalEdit.dialog = true
+      // console.log(user)
+      this.$refs.modalCreateEdit.fillData(user)
+      this.$refs.modalCreateEdit.edit = true
+      this.$refs.modalCreateEdit.dialog = true
     },
     getEstados() {
       api.get('/utils/estados')
@@ -192,6 +195,10 @@ export default {
         console.log(e);
       })
     },
+    // newUser () {
+    //   this.$refs.modalCreateEdit.edit = false
+    //   this.$refs.modalCreateEdit.dialog = true
+    // },
     getRoles() {
       api.get('/roles/todos')
       .then(response => {

@@ -5,6 +5,9 @@
     <core-drawer />
 
     <core-view />
+    <v-snackbar v-model="showSnack" :timeout="3000" :color="snackType">
+      {{ snackMessage }}
+    </v-snackbar>
   </v-app>
 </template>
 <script>
@@ -18,6 +21,23 @@ export default {
       console.log('token fail')
       localStorage.removeItem('reface')
       this.$router.go()
+    }
+    this.$root.$on('notify', (e) => {
+      this.notify(e)
+    })
+  },
+  data () {
+    return {
+      showSnack: false,
+      snackMessage: '',
+      snackType: '',
+    }
+  },
+  methods: {
+    notify ({ message, type }) {
+      this.showSnack = true
+      this.snackMessage = message
+      this.snackType = type
     }
   }
 };
