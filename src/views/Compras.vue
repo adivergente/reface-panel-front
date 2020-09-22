@@ -21,7 +21,7 @@
           wrap
         >
           </v-layout>
-          <v-card>
+          <v-card elevation="0" class="mt-4">
             <v-tabs>
               <v-tab  @click="cambio(2)"> Nuevas</v-tab>
               <v-tab @click="cambio(1)">Atendidas</v-tab>
@@ -76,7 +76,7 @@
                   <span v-if="item.paqueteria.tracking_id">
                     {{ item.paqueteria.tracking_id }}
                   </span>
-                  <v-btn v-else color="success" small>subir</v-btn>
+                  <v-btn v-else color="success" small class="white--text">subir</v-btn>
                 </td>
                 <td>
                   <v-chip :color="getColor(item.status)" dark small label>
@@ -89,7 +89,9 @@
                   </v-chip>
                 </td>
                 <td class="text-xs-right">
-                  <Modalinfo :item="item"/>
+                  <v-btn flat icon color="#003b94!important" class="text-lowercase" @click="$refs.modalInfo.openModal(item)" :ripple="false">
+                    ver
+                  </v-btn>
                   <!-- <Modalcompras :id="item.id" :productos="item.total_productos" :precio="item.total_venta" :id_compras="item.id_compras" :email="item.datos_personales.email" />
                   <Modalstatus :id="item._id" :status="item.estado" :email="item.datos_personales.email" /> -->
                 </td>
@@ -164,6 +166,7 @@
               </template>
             </v-data-table>
           </v-card>
+          <Modalinfo ref="modalInfo"/>
           <Modalalta v-if="tab_cajas" @close="closeagregar"/>
           <Modaloxxo v-else />
         </material-card>
@@ -452,7 +455,7 @@ export default {
       }
     },
     compras(){
-      console.log('entro a method compras')
+      // console.log('entro a method compras')
       api.get(`/ordenes`)
       .then(response => {
         const { success, message, data } = response.data

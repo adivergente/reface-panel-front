@@ -69,29 +69,22 @@
                     <v-list-tile
                       @click="$refs.modalCreateEdit.editUser(item)"
                     >
-                      <v-list-tile-title>Editar</v-list-tile-title>
+                      <v-list-tile-title>Editar información</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile
                       @click="$refs.modalChangePass.openModal(item)"
                     >
                       <v-list-tile-title>Cambiar contraseña</v-list-tile-title>
                     </v-list-tile>
-                    <v-divider></v-divider>
-                    <v-list-tile
-                      @click="$refs.modalCreateEdit.editUser(item)"
-                    >
-                      <v-list-tile-title class="red--text">Eliminar</v-list-tile-title>
-                    </v-list-tile>
                   </v-list>
                 </v-menu>
-                <!-- <Modaleliminar :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :id="item.id" :status="item.status" /> -->
               </td>
             </template>
           </v-data-table>
           <Modaldetalles ref="modalDetalles"/>
+          <change-pass ref="modalChangePass"/>
           <modal-usuario :estados="estados" :roles="roles" @done="loadUsers" ref="modalCreateEdit"/>
           <v-btn class="white--text" small color="#003b94" dark @click="$refs.modalCreateEdit.newUser()"> Nuevo usuario </v-btn>
-          <change-pass ref="modalChangePass"/>
           <Roles/>
         </material-card>
       </v-flex>

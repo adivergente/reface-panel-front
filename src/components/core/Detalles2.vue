@@ -16,7 +16,6 @@
           </v-flex>
         </v-layout>
         <v-card-actions>
-          
           <v-btn
             color="red darken-1"
             flat="flat"
@@ -52,7 +51,6 @@
           </v-flex>
         </v-layout>
         <v-card-actions>
-         
           <v-btn
             color="red darken-1"
             flat="flat"

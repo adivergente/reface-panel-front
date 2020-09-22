@@ -16,6 +16,7 @@ import App from './App'
 import i18n from '@/i18n'
 import router from '@/router'
 import store from '@/store'
+import './plugins/pipes'
 
 // Sync store with router
 sync(store, router)
