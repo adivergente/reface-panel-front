@@ -72,7 +72,7 @@
                       <v-list-tile-title>Editar</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile
-                      @click="$refs.modalCreateEdit.editUser(item)"
+                      @click="$refs.modalChangePass.openModal(item)"
                     >
                       <v-list-tile-title>Cambiar contraseña</v-list-tile-title>
                     </v-list-tile>
@@ -89,9 +89,9 @@
             </template>
           </v-data-table>
           <Modaldetalles ref="modalDetalles"/>
-          <modal-usuario class="white--text" :estados="estados" :roles="roles" @done="loadUsers" ref="modalCreateEdit"/>
+          <modal-usuario :estados="estados" :roles="roles" @done="loadUsers" ref="modalCreateEdit"/>
           <v-btn class="white--text" small color="#003b94" dark @click="$refs.modalCreateEdit.newUser()"> Nuevo usuario </v-btn>
-          <!-- <Modalalta/> -->
+          <change-pass ref="modalChangePass"/>
           <Roles/>
         </material-card>
       </v-flex>
@@ -106,6 +106,7 @@ import Modaldetalles from '@/components/core/Detalles.vue'
 import ModalUsuario from '@/components/core/AddEditUser.vue'
 import Modaleliminar from '@/components/core/Detalles2.vue'
 import Modalalta from '@/components/core/Altas_usuarios.vue'
+import ChangePass from '@/components/core/ChangePass.vue'
 import Roles from '@/components/core/Roles.vue'
 import {api} from '@/api'
 //import $ from 'jquery'
@@ -114,6 +115,7 @@ export default {
   name: 'Usuarios',
   components:{
 //    toolbar,
+    ChangePass,
     Modaldetalles,
     Modaleliminar,
     ModalUsuario,

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model.trim="dialog" max-width="500" scrollable persistent>
+  <v-dialog v-model="dialog" max-width="500" scrollable persistent>
     <v-form ref="form" v-on:submit.prevent="save()" lazy-validation class="w-100">
       <v-card>
         <v-card-title class="pa-0">
