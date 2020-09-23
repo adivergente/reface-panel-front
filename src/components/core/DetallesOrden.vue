@@ -37,6 +37,13 @@
             {{ order.created_at | date }}
           </div>
         </div>
+        <div v-if="order.user_atiende && order.user_atiende.length" class="details py-3">
+          <div class="details__title">Atiende:</div>
+          <div class="details__content">
+            <span>{{ atiende.nombres + '  ' + atiende.apellidos }}</span><br>
+            <small>{{ atiende.email }}</small>
+          </div>
+        </div>
         <h3 class="font-weight-regular my-6 font--color ls">PRODUCTOS</h3>
         <div
           v-for="({ product, qty }, index) in products" :key="index"
@@ -110,6 +117,12 @@ export default {
         return this.order.usuario[0].datos_personales
       }
       return this.order.user || {}
+    },
+    atiende () {
+      if (this.order.user_atiende && this.order.user_atiende.length) {
+        return this.order.user_atiende[0].datos_personales
+      }
+      return {}
     },
     domicilio () {
       const dom = []

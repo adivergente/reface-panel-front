@@ -465,6 +465,7 @@ export default {
         this.items2 = []
         const { success, message, data } = response.data
         const id = this.$jwt.decode(localStorage.getItem('reface'))._id || ''
+        console.log('data', data)
         data.forEach(order => {
           order.atiende == id
             ? this.items2.push(order)
