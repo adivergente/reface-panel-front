@@ -1,12 +1,12 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" small color="error" dark> Actualizar OXXO </v-btn>
+      <v-btn v-on="on" small color="error" dark class="white--text"> Actualizar OXXO </v-btn>
     </template>
     <v-card>
       <v-form ref="form"  v-on:submit.prevent="Update()" lazy-validation>
         <v-toolbar dark color="indigo">
-         <v-toolbar-title style="color:white;" >Actualizar referencia de OXXO</v-toolbar-title>
+         <v-toolbar-title style="color:white;">Actualizar referencia de OXXO</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-layout row>
@@ -42,7 +42,6 @@
           </v-flex>
         </v-layout>
         <v-card-actions>
-          
           <v-btn
             color="red darken-1"
             flat="flat"

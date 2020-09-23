@@ -54,7 +54,9 @@
               :headers="headers"
               :items="items"
               :search="escrito"
-              v-if="noatendidas">
+              v-if="noatendidas"
+              :pagination.sync="pagination"
+            >
               <template
                 slot="headerCell"
                 slot-scope="{ header }"
@@ -68,6 +70,7 @@
                 slot="items"
                 slot-scope="{ item }"
               >
+                <td>{{ item.created_at | date }}</td>
                 <td>{{ item.folio }}</td>
                 <td>{{ item.usuario[0].datos_personales.nombres + ' ' + item.usuario[0].datos_personales.apellidos }}</td>
                 <!-- <td>{{ item.productos.length }}</td> -->
@@ -79,9 +82,9 @@
                   <v-btn v-else color="success" small class="white--text">subir</v-btn>
                 </td>
                 <td>
-                  <v-chip :color="getColor(item.status)" dark small label>
-                    {{ translateStatus(item.status) }}
-                  </v-chip>
+                  <v-btn small outline :color="getColor(item.status)" class="white--text" @click="$refs.modalChangeStatus.openModal(item)">
+                    {{ item.status }}
+                  </v-btn>
                 </td>
                 <td>
                   <v-chip :color="getColor2(item.forma_pago)" dark small label>
@@ -92,8 +95,6 @@
                   <v-btn flat icon color="#003b94!important" class="text-lowercase" @click="$refs.modalInfo.openModal(item)" :ripple="false">
                     ver
                   </v-btn>
-                  <!-- <Modalcompras :id="item.id" :productos="item.total_productos" :precio="item.total_venta" :id_compras="item.id_compras" :email="item.datos_personales.email" />
-                  <Modalstatus :id="item._id" :status="item.estado" :email="item.datos_personales.email" /> -->
                 </td>
               </template>
             </v-data-table>
@@ -116,23 +117,31 @@
                 slot="items"
                 slot-scope="{ item }"
               >
-                <td>{{ item.id }}</td>
-                <td>{{ item.datos_personales.nombre_completo }}</td>
-                <td>{{ item.total_productos }}</td>
-                <td>$ {{ item.total_venta }} M.N.</td>
+                <td>{{ item.created_at | date }}</td>
+                <td>{{ item.folio }}</td>
+                <td>{{ item.usuario[0].datos_personales.nombres + ' ' + item.usuario[0].datos_personales.apellidos }}</td>
+                <!-- <td>{{ item.productos.length }}</td> -->
+                <td>$ {{ item.total }} M.N.</td>
                 <td >
-                  <v-btn small @click="subirGuia(item)" :color="ColorGuia(item.numero_guia)">{{guia(item.numero_guia)}}</v-btn>
+                  <span v-if="item.paqueteria.tracking_id">
+                    {{ item.paqueteria.tracking_id }}
+                  </span>
+                  <v-btn v-else color="success" small class="white--text">subir</v-btn>
                 </td>
                 <td>
-                  <v-chip :color="getColor(item.estado)" dark > {{item.estado}}</v-chip>
+                  <v-btn small outline :color="getColor(item.status)" class="white--text" @click="$refs.modalChangeStatus.openModal(item)">
+                    {{ item.status }}
+                  </v-btn>
                 </td>
                 <td>
-                  <v-chip :color="getColor2(item.tipo)" dark > {{item.tipo}}</v-chip>
+                  <v-chip :color="getColor2(item.forma_pago)" dark small label>
+                    {{ item.forma_pago }}
+                  </v-chip>
                 </td>
                 <td class="text-xs-right">
-                  <Modalinfo :clave="item.id" :nombres="item.datos_personales.nombres" :apellidos="item.datos_personales.apellidos" :email="item.datos_personales.email" :telefono="item.datos_personales.telefono" :cp="item.datos_entrega.codigo_postal" :estado="item.datos_entrega.estado" :municipio="item.datos_entrega.municipio" :calle="item.datos_entrega.calle" :num_interior="item.datos_entrega.num_interior" :num_exterior="item.datos_entrega.num_exterior" :colonia="item.datos_entrega.colonia" :referencias="item.datos_entrega.referencias" :productos="item.total_productos" :total="item.total_venta" :status="item.estado" />
-                  <Modalcompras :id="item.id" :productos="item.total_productos" :precio="item.total_venta" :id_compras="item.id_compras" :email="item.datos_personales.email" />
-                  <Modalstatus :id="item._id" :status="item.estado" :email="item.datos_personales.email" />
+                  <v-btn flat icon color="#003b94!important" class="text-lowercase" @click="$refs.modalInfo.openModal(item)" :ripple="false">
+                    ver
+                  </v-btn>
                 </td>
               </template>
             </v-data-table>
@@ -167,8 +176,9 @@
             </v-data-table>
           </v-card>
           <Modalinfo ref="modalInfo"/>
+          <modal-change-status @update="compras" ref="modalChangeStatus"/>
           <Modalalta v-if="tab_cajas" @close="closeagregar"/>
-          <Modaloxxo v-else />
+          <Modaloxxo v-else/>
         </material-card>
       </v-flex>
     </v-layout>
@@ -184,8 +194,9 @@
 
 //import toolbar from '@/components/Toolbar.vue'
 import Modalinfo from '@/components/core/Detalles4.vue'
-import Modalcompras from '@/components/core/Detalles6.vue'
+// import Modalcompras from '@/components/core/Detalles6.vue'
 import Modalstatus from '@/components/core/Detalles5.vue'
+import ModalChangeStatus from '@/components/core/ChangeOrderStatus.vue'
 import Guia from '@/components/core/SubirGuia.vue'
 import Modaloxxo from '@/components/core/Detalles8.vue'
 import Modaleditar from '@/components/core/EditarCaja.vue'
@@ -198,7 +209,8 @@ export default {
     components:{
 //    toolbar,
       Modalinfo,
-      Modalcompras,
+      ModalChangeStatus,
+      // Modalcompras,
       Modalstatus,
       Modaloxxo,
       Guia,
@@ -220,7 +232,7 @@ export default {
       show: false,
       rowsPerPageItems: [12, 24, 36],
       pagination: {
-        rowsPerPage: 12
+        rowsPerPage: 10
       },
       items: [],
       items2: [],
@@ -235,6 +247,9 @@ export default {
       sub:null,
       sub2:null,
       headers: [
+        {
+          text: 'Fecha'
+        },
         {
           text: 'Folio'
         },
@@ -425,15 +440,11 @@ export default {
     },
     getColor(status){
       switch (status.toLowerCase()){
-        case 'paid':
-          return 'green'
-        case 'pending':
-          return 'orange'
-        case 'enviado':
-          return 'blue'
-        case 'entregado':
-          return 'teal'
-        case 'procesando':
+        case 'pagado': return 'info'
+        case 'pendiente': return 'amber accent-2'
+        case 'procesando': return 'grey lighten-2'
+        case 'enviado': return 'blue darken-2'
+        case 'entregado': return 'success'
         default: return 'grey'
       }
     },
@@ -447,40 +458,21 @@ export default {
             return 'orange'
       }
     },
-    translateStatus (status) {
-      switch (status.toLowerCase()) {
-        case 'paid': return 'Pagado'
-        case 'pending': return 'Pendiente'
-        default: return status
-      }
-    },
     compras(){
-      // console.log('entro a method compras')
       api.get(`/ordenes`)
       .then(response => {
+        this.items = []
+        this.items2 = []
         const { success, message, data } = response.data
-        const id = sessionStorage.getItem('id')
-        console.log('ordenes', data)
-        // console.log('atiende: ',response.data[0].atiende)
-        // JSON responses are automatically parsed.
-        for(var i in data){
-          console.log()
-          if(data[i].atiende === id){
-            console.log(i)
-            this.items2.push(data[i])
-          }else{
-            if(!data[i].atiende){
-              console.log(i)
-              this.items.push(data[i])
-            }
-          }
-        }
-        // console.log(this.items2);
+        const id = this.$jwt.decode(localStorage.getItem('reface'))._id || ''
+        data.forEach(order => {
+          order.atiende == id
+            ? this.items2.push(order)
+            : this.items.push(order)
+        })
       })
       .catch(e => {
         this.errors.push(e)
-      //  console.log("Error");
-      //  console.log(e);
       })
     },
     cajas(){
@@ -501,6 +493,9 @@ export default {
       //  console.log("Error");
       //  console.log(e);
       })
+    },
+    changeStatus() {
+
     }
   }
 }
