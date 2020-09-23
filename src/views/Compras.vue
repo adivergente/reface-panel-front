@@ -23,57 +23,60 @@
           </v-layout>
           <v-card elevation="0" class="mt-4">
             <v-tabs v-model="tab">
-              <v-tab> Nuevas</v-tab>
+              <v-tab>Todas</v-tab>
+              <v-tab>Nuevas</v-tab>
               <v-tab>Atendidas</v-tab>
               <v-tab>Cajas</v-tab>
             </v-tabs>
             <v-card-title primary-title color="primary">
-                <v-flex md2>
-                  <div class="headline">
-                    {{tipo}}
-                  </div>
-                </v-flex>
-                <v-flex md8>
-                  <v-text-field
-                    v-model="escrito"
-                    label="Buscar"
-                    outline
-                    clearable
-                    @click:clear="clearEstados"
+              <v-spacer></v-spacer>
+              <v-flex md6>
+                <v-text-field
+                  v-model="escrito"
+                  label="Buscar"
+                  outline
+                  clearable
+                  @click:clear="clearEstados"
+                >
+                </v-text-field>
+              </v-flex>
+              <v-flex md3>
+                <v-select
+                  v-if="tab !== 3"
+                  v-model="est"
+                  outline
+                  label="Estados"
+                  @change="buscaestado(est)"
+                  :items="estados"
+                  clearable
                   >
-                  </v-text-field>
-                </v-flex>
-                <v-flex md2>
-                  <v-select
-                    v-if="tab !== 2"
-                    v-model="est"
-                    outline
-                    label="Estados"
-                    @change="buscaestado(est)"
-                    :items="estados"
-                    clearable
-                    >
-                  </v-select>
-                </v-flex>
+                </v-select>
+              </v-flex>
             </v-card-title>
 
             <ordenes-table
-              :items="items"
+              :items="ordenes"
               :search="escrito"
               v-if="tab === 0"
               @update="compras"
             />
             <ordenes-table
-              :items="items2"
+              :items="ordenesNuevas"
               :search="escrito"
               v-if="tab === 1"
+              @update="compras"
+            />
+            <ordenes-table
+              :items="ordenesAtendidas"
+              :search="escrito"
+              v-if="tab === 2"
               @update="compras"
             />
             <v-data-table
               :headers="headersCajas"
               :items="items_cajas"
               :search="escrito"
-              v-if="tab === 2"
+              v-if="tab === 3"
             >
               <template
                 slot="headerCell"
@@ -156,12 +159,10 @@ export default {
       rating: 3,
       id:null,
       show: false,
-      rowsPerPageItems: [12, 24, 36],
-      // pagination: {
-      //   rowsPerPage: 10
-      // },
-      items: [],
-      items2: [],
+      // rowsPerPageItems: [12, 24, 36],
+      ordenes: [],
+      ordenesNuevas: [],
+      ordenesAtendidas: [],
       errors: [],
       empty: [],
       content1:null,
@@ -197,10 +198,6 @@ export default {
       ],
       estados:['Procesando','Pendiente','Pagado','Enviado','Entregado'],
       est:null,
-      atendidas:false,
-      noatendidas:true,
-      singleSelect:false,
-      tipo:"Nuevas",
       items_cajas:[],
       tab_cajas:false
     }
@@ -276,28 +273,6 @@ export default {
       this.infoguia=info
       this.dialog2=true
     },
-    // ColorGuia(info){
-    //   if(info != null){
-    //     if(info != ""){
-    //       return "success"
-    //     }else{
-    //       return "grey"
-    //     }
-    //   }else{
-    //     return "grey"
-    //   }
-    // },
-    // guia(info){
-    //   if(info != null){
-    //     if(info != ""){
-    //       return info
-    //     }else{
-    //       return "Subir"
-    //     }
-    //   }else{
-    //     return "Subir"
-    //   }
-    // },
     buscaestado(estado){
       if (!estado) {
         this.escrito = ''
@@ -311,15 +286,19 @@ export default {
     compras(){
       api.get(`/ordenes`)
       .then(response => {
-        this.items = []
-        this.items2 = []
+        this.ordenes = []
+        this.ordenesNuevas = []
+        this.ordenesAtendidas = []
         const { success, message, data } = response.data
         const id = this.$jwt.decode(localStorage.getItem('reface'))._id || ''
-        console.log('data', data)
+        console.log('id', id)
         data.forEach(order => {
-          order.atiende == id
-            ? this.items2.push(order)
-            : this.items.push(order)
+          this.ordenes.push(order)
+          if(!order.atiende) {
+            this.ordenesNuevas.push(order)
+          } else if (order.atiende === id) {
+            this.ordenesAtendidas.push(order)
+          }
         })
       })
       .catch(e => {
@@ -329,9 +308,6 @@ export default {
     cajas(){
       api.get(`/cajas/list-cajas`)
       .then(response => {
-        //console.log('atiende: ',response.data[0].atiende)
-        // JSON responses are automatically parsed.
-        //alert(response.data.success)
         if(response.data.success == true){
           this.items_cajas=response.data.data
         }else{
@@ -341,8 +317,6 @@ export default {
       .catch(e => {
         this.errors.push(e)
         console.log(e)
-      //  console.log("Error");
-      //  console.log(e);
       })
     }
   }
