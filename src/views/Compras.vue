@@ -34,17 +34,24 @@
                   </div>
                 </v-flex>
                 <v-flex md8>
-                  <v-text-field outline label="Buscar" v-model="escrito">
+                  <v-text-field
+                    v-model="escrito"
+                    label="Buscar"
+                    outline
+                    clearable
+                    @click:clear="clearEstados"
+                  >
                   </v-text-field>
                 </v-flex>
                 <v-flex md2>
                   <v-select
+                    v-if="tab !== 2"
                     v-model="est"
                     outline
                     label="Estados"
                     @change="buscaestado(est)"
                     :items="estados"
-                    v-if="tab !== 2"
+                    clearable
                     >
                   </v-select>
                 </v-flex>
@@ -188,7 +195,7 @@ export default {
            align: 'right'
         }
       ],
-      estados:['Todos','Procesando','Pendiente','Pagado','Enviado','Entregado'],
+      estados:['Procesando','Pendiente','Pagado','Enviado','Entregado'],
       est:null,
       atendidas:false,
       noatendidas:true,
@@ -292,32 +299,15 @@ export default {
     //   }
     // },
     buscaestado(estado){
-      if(estado == 'Todos'){
+      if (!estado) {
         this.escrito = ''
-      }else{
+      } else {
         this.escrito = estado
       }
     },
-    // getColor(status){
-    //   switch (status.toLowerCase()){
-    //     case 'pagado': return 'info'
-    //     case 'pendiente': return 'amber accent-2'
-    //     case 'procesando': return 'grey lighten-2'
-    //     case 'enviado': return 'blue darken-2'
-    //     case 'entregado': return 'success'
-    //     default: return 'grey'
-    //   }
-    // },
-    // getColor2(fPago){
-    //   switch (fPago.toLowerCase()){
-    //     case 'oxxo':
-    //         return 'orange'
-    //     case 'paypal':
-    //         return 'blue'
-    //     default:
-    //         return 'orange'
-    //   }
-    // },
+    clearEstados() {
+      if (this.est) this.est = ''
+    },
     compras(){
       api.get(`/ordenes`)
       .then(response => {

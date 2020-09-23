@@ -23,6 +23,7 @@
           <div class="details__title">Pago via:</div>
           <div class="details__content">
             {{ order.forma_pago }}
+            <small v-if="order.transaction_id" class="ml-1">(ref: {{ order.transaction_id }})</small>
           </div>
         </div>
         <div v-if="order.status" class="details py-3">

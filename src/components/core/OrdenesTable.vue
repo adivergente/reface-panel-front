@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="items"
+      :items="orders"
       :search="search"
       :pagination.sync="pagination"
     >
@@ -19,9 +19,9 @@
         slot="items"
         slot-scope="{ item }"
       >
-        <td>{{ item.created_at | date }}</td>
+        <td>{{ item.fecha }}</td>
         <td>{{ item.folio }}</td>
-        <td>{{ item.usuario[0].datos_personales.nombres + ' ' + item.usuario[0].datos_personales.apellidos }}</td>
+        <td>{{ item.cliente }}</td>
         <!-- <td>{{ item.productos.length }}</td> -->
         <td>$ {{ item.total }} M.N.</td>
         <td >
@@ -42,7 +42,7 @@
         </td>
         <td class="text-xs-right">
           <v-btn flat icon color="#003b94!important" class="text-lowercase" @click="$refs.modalInfo.openModal(item)" :ripple="false">
-            ver
+            detalles
           </v-btn>
         </td>
       </template>
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import Modalinfo from '@/components/core/Detalles4.vue'
 import ModalChangeStatus from '@/components/core/ChangeOrderStatus.vue'
 
@@ -72,32 +73,47 @@ export default {
       default: ''
     }
   },
+  computed: {
+    orders () {
+      return this.items.map(o => {
+        return {
+          ...o,
+          cliente: `${o.usuario[0].datos_personales.nombres} ${o.usuario[0].datos_personales.apellidos}`,
+          fecha: dayjs(o.created_at).format('DD/MM/YYYY')
+        }
+      })
+    }
+  },
   data () {
     return {
       headers: [
         {
-          text: 'Fecha'
+          text: 'Fecha',
+          value: 'fecha'
         },
         {
-          text: 'Folio'
+          text: 'Folio',
+          value: 'folio'
         },
         {
-          text: 'Nombres'
-        },
-        // {
-        //   text: 'Productos'
-        // },
-        {
-          text: 'Total'
+          text: 'Nombres',
+          value: 'cliente'
         },
         {
-          text: 'Guía'
+          text: 'Total',
+          value: 'total'
         },
         {
-          text: 'Estatus'
+          text: 'Guía',
+          value: 'paqueteria.tracking_id'
         },
         {
-          text: 'F. Pago'
+          text: 'Estatus',
+          value: 'status'
+        },
+        {
+          text: 'F. Pago',
+          value: 'forma_pago'
         },
         {
           sortable: false,
