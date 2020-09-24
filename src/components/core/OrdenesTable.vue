@@ -25,10 +25,20 @@
         <!-- <td>{{ item.productos.length }}</td> -->
         <td>$ {{ item.total }} M.N.</td>
         <td >
-          <span v-if="item.paqueteria.tracking_id">
-            {{ item.paqueteria.tracking_id }}
-          </span>
-          <v-btn v-else color="success" small class="white--text">subir</v-btn>
+          <v-btn
+            v-if="item.paqueteria && item.paqueteria.tracking_id"
+            outline
+            small
+            color="grey darken-1"
+            @click="$refs.modalTracking.openModal(item)"
+          >{{ item.paqueteria.tracking_id }}</v-btn>
+          <v-btn
+            v-else
+            color="success"
+            small
+            class="white--text"
+            @click="$refs.modalTracking.openModal(item)"
+          >subir</v-btn>
         </td>
         <td>
           <v-btn small outline :color="getStatusColor(item.status)" class="white--text" @click="$refs.modalChangeStatus.openModal(item)">
@@ -49,6 +59,7 @@
     </v-data-table>
     <Modalinfo ref="modalInfo"/>
     <modal-change-status @update="$emit('update')" ref="modalChangeStatus"/>
+    <modal-tracking @update="$emit('update')" ref="modalTracking"/>
   </div>
 </template>
 
@@ -56,12 +67,14 @@
 import dayjs from 'dayjs'
 import Modalinfo from '@/components/core/Detalles4.vue'
 import ModalChangeStatus from '@/components/core/ChangeOrderStatus.vue'
+import ModalTracking from '@/components/core/UpdateOrderTracking.vue'
 
 export default {
   name: 'OrdenesTable',
   components: {
     Modalinfo,
-    ModalChangeStatus
+    ModalChangeStatus,
+    ModalTracking
   },
   props: {
     items: {

@@ -24,16 +24,21 @@
           >
             <v-img
               :src="logo"
-              height="34"
+              height="40"
               contain
             />
           </v-list-tile-avatar>
-          <v-list-tile-title class="title">
-            Reface Admin
-          </v-list-tile-title>
+          <v-list-tile-content>
+            <v-list-tile-title class="title">
+              {{ userName }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              {{ userEmail }}
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
         </v-list-tile>
 
-        <v-divider style="margin: auto;"/>
+        <v-divider/>
         <v-list-tile
           v-if="responsive"
         >
@@ -51,7 +56,6 @@
           :active-class="color"
           avatar
           class="v-list-item"
-          style="height: 45px;"
         >
           <v-list-tile-action>
             <v-icon>{{ link.icon }}</v-icon>
@@ -60,17 +64,16 @@
             v-text="link.text"
           />
         </v-list-tile>
-        <v-divider style="margin: auto;     margin-left: 7%;"/>
-        <v-list-tile style="height: 45px;">
+        <v-divider class="mt-5 mb-1"/>
+        <v-list-tile class="v-list-item">
           <v-list-tile-action>
-              <v-icon>mdi-clipboard-outline</v-icon>
+              <v-icon>mdi-logout</v-icon>
           </v-list-tile-action>
           <v-list-tile-title
-            v-text="'salir'"
+            v-text="'Salir'"
             @click="logout()"
           />
         </v-list-tile>
-        
       </v-layout>
     </v-img>
   </v-navigation-drawer>
@@ -87,11 +90,12 @@ import routerLinks from '@/utils/routerLinks'
 
 export default {
   data: () => ({
-    logo: './img/reface_logo.jpeg',
+    logo: './img/logo2.png',
     links: [
       'usuarios'
     ],
-    responsive: false
+    responsive: false,
+    token: ''
   }),
   computed: {
     ...mapState('app', ['image', 'color']),
@@ -105,6 +109,22 @@ export default {
     },
     items () {
       return this.$t('Layout.View.items')
+    },
+    userEmail () {
+      return this.token.id && this.token.id
+    },
+    userName () {
+      return (this.token && this.token.username) || (this.token && this.token.usuario)
+    }
+  },
+  created(){
+    this.token = this.$jwt.decode(localStorage.getItem('reface'))
+    if (this.token && this.token.rol) {
+      if(this.token.rol.includes('Admin') || this.token.rol.includes('admin')) {
+        this.links= routerLinks
+      }else{
+        this.buscaRol(sessionStorage.getItem('rol'))
+      }
     }
   },
   mounted () {
@@ -144,14 +164,6 @@ export default {
       .catch(e => {
         console.log(e);
       })
-    }
-  },
-  created(){
-    const roles = this.$jwt.decode(localStorage.getItem('reface')).rol || []
-    if(roles.includes('Admin') || roles.includes('admin')) {
-      this.links= routerLinks
-    }else{
-      this.buscaRol(sessionStorage.getItem('rol'))
     }
   }
 }

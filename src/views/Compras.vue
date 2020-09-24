@@ -110,7 +110,7 @@
     <v-layout>
       <Modaleliminar :info="info2" :dialog="dialog3" @close="closeeliminar"/>
       <Modaleditar :info="info3" :dialog="dialog4" @close="closeeditar"/>
-      <Guia :info="infoguia" :dialog="dialog2" @close="closeguia"/>
+      <!-- <Guia :info="infoguia" :dialog="dialog2" @close="closeguia"/> -->
     </v-layout>
   </v-container>
 </template>
@@ -121,9 +121,9 @@
 // import Modalinfo from '@/components/core/Detalles4.vue'
 // import Modalcompras from '@/components/core/Detalles6.vue'
 import OrdenesTable from '@/components/core/OrdenesTable.vue'
-import Modalstatus from '@/components/core/Detalles5.vue'
+// import Modalstatus from '@/components/core/Detalles5.vue'
 // import ModalChangeStatus from '@/components/core/ChangeOrderStatus.vue'
-import Guia from '@/components/core/SubirGuia.vue'
+// import Guia from '@/components/core/SubirGuia.vue'
 import Modaloxxo from '@/components/core/Detalles8.vue'
 import Modaleditar from '@/components/core/EditarCaja.vue'
 import Modaleliminar from '@/components/core/BorrarCaja.vue'
@@ -138,9 +138,9 @@ export default {
       // Modalinfo,
       // ModalChangeStatus,
       // Modalcompras,
-      Modalstatus,
+      // Modalstatus,
       Modaloxxo,
-      Guia,
+      // Guia,
       Modaleditar,
       Modaleliminar,
       Modalalta,

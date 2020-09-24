@@ -45,7 +45,16 @@
             <small>{{ atiende.email }}</small>
           </div>
         </div>
-        <h3 class="font-weight-regular my-6 font--color ls">PRODUCTOS</h3>
+        <template v-if="order.paqueteria && order.paqueteria.tracking_id">
+          <h6 class="font-weight-regular mt-3 mb-0 ls">PAQUETERÍA</h6>
+          <div class="details py-3">
+            <div class="details__title">Tracking:</div>
+            <div class="details__content">
+              <span>{{ order.paqueteria.tracking_id }}</span>
+            </div>
+          </div>
+        </template>
+        <h5 class="font-weight-regular mt-3 ls">PRODUCTOS</h5>
         <div
           v-for="({ product, qty }, index) in products" :key="index"
           class="details py-3"
@@ -72,27 +81,29 @@
         </div>
         <div v-if="order.subtotal" class="details pt-3 border-bottom-none">
           <div class="details__content d-flex align-center">
-            <h4 class="font-weight-regular">Subtotal</h4>
+            <h4 class="font-weight-regular my-0">Subtotal</h4>
           </div>
-          <div class="details__options">
-            <h4>${{ order.subtotal }}</h4>
+          <div class="details__options my-0">
+            <h4 class="my-0">${{ order.subtotal }}</h4>
           </div>
         </div>
         <div v-if="order.paqueteria && order.paqueteria.precio" class="details border-bottom-none">
           <div class="details__content d-flex align-center">
-            <h4 class="font-weight-regular">Envio</h4>
+            <h4 class="font-weight-regular my-0">Envio</h4>
           </div>
           <div class="details__options">
-            <h4>${{ order.paqueteria.precio }}</h4>
+            <h4 class="my-0">${{ order.paqueteria.precio }}</h4>
           </div>
         </div>
         <div class="details pb-4" :class="order.subtotal || order.paqueteria ? 'pt-4' : 'pt-7'">
-          <div class="details__content d-flex align-center">
-            <h2 class="d-inline">TOTAL</h2>
+          <div class="details__content d-flex align-baseline">
+            <h3 class="d-inline font-weight-regular" style="flex: 0!important">
+              TOTAL
+            </h3>
             <span class="ml-3">({{ totalProducts }} productos)</span>
           </div>
           <div class="details__options">
-            <h2>${{ order.total }}</h2>
+            <h3 class="font-weight-regular">${{ order.total }}</h3>
           </div>
         </div>
       </v-card-text>

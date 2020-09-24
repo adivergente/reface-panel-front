@@ -14,24 +14,6 @@
           <v-radio label="Entregado" value="entregado"></v-radio>
         </v-radio-group>
       </v-card-text>
-      <!-- <hr>
-      <v-card-actions>
-        <v-btn
-          color="red darken-1"
-          flat="flat"
-          @click="dialog = false"
-        >
-          Cancelar
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          flat
-          type="submit"
-        >
-          Aceptar
-        </v-btn>
-      </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
@@ -49,25 +31,6 @@ export default {
     }
   },
   methods: {
-    save () {
-      if (this.$refs.form.validate()) {
-        api.post(`/usuarios/change-password/${this.user._id}`, { password: this.password })
-          .then(response => {
-            if (!response.data.success) {
-              console.log(response.data.message)
-              this.$root.$emit('notify', { message: response.data.message, type: 'error' })
-            } else {
-              console.log('response:', response.data)
-              this.$root.$emit('notify', { message: response.data.message, type: 'success' })
-              this.dialog = false
-            }
-          })
-          .catch(e => {
-            console.log(e);
-            alert('Error ' + e)
-          })
-      }
-    },
     update() {
       console.log('update status')
       api.post(`/ordenes/change-status/${this.order._id}`, { status: this.status })
