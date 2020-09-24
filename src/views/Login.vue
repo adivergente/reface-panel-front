@@ -181,7 +181,7 @@ export default {
       } else if (this.login.password.length === 0) {
         this.showAlert("Type your password");
       } else {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost:61' : 'http://tiendavirtual.dyndns.org:61'
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost:61/api' : 'http://tiendavirtual.dyndns.org:61/api'
         axios.post(`${url}/ad-usuarios/login`, this.login)
           .then(response => {
             console.log('login',response.data)
