@@ -46,9 +46,7 @@
           </v-btn>
         </td>
         <td>
-          <v-chip :color="getFPagoColor(item.forma_pago)" dark small label>
-            {{ item.forma_pago }}
-          </v-chip>
+          <div v-html="item.pago" :class="`${getFPagoColor(item.forma_pago)} f-pago`"></div>
         </td>
         <td class="text-xs-right">
           <v-btn flat icon color="#003b94!important" class="text-lowercase" @click="$refs.modalInfo.openModal(item)" :ripple="false">
@@ -92,7 +90,8 @@ export default {
         return {
           ...o,
           cliente: `${o.usuario[0].datos_personales.nombres} ${o.usuario[0].datos_personales.apellidos}`,
-          fecha: dayjs(o.created_at).format('DD/MM/YYYY')
+          fecha: dayjs(o.created_at).format('DD/MM/YYYY'),
+          pago: `${o.forma_pago}<br><small>${o.transaction_id}</small>`
         }
       })
     }
@@ -126,7 +125,7 @@ export default {
         },
         {
           text: 'F. Pago',
-          value: 'forma_pago'
+          value: 'pago'
         },
         {
           sortable: false,
@@ -164,3 +163,11 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.f-pago {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #FFF;
+}
+</style>
